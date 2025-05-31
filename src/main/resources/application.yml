@@ -4,10 +4,11 @@ spring:
     username: your_db_username
     password: your_db_password
     driver-class-name: org.postgresql.Driver
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: none        # миграции будет делать Liquibase, не Hibernate
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -16,18 +17,14 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    # Если хотите хранить логи о миграциях в отдельной таблице:
-    # contexts: development, production
 
 server:
   port: 8080
 
-# JWT settings
 jwt:
-  secret: yourSuperSecretJwtKeyHere  # поменяйте на сложный ключ, загружайте из переменных окружения
-  expiration-ms: 3600000             # 1 час в миллисекундах
+  secret: <ВАШ Base64-закодированный 32+-байтный секрет>
+  expiration-ms: 3600000
 
-# Путь для хранения загруженных файлов (папка на диске)
 app:
   upload:
     dir: ./uploads
@@ -35,7 +32,7 @@ app:
 logging:
   level:
     org.springframework: INFO
-    com.example.cleaningapp.server: DEBUG   # чтобы видеть свои логи
+    com.example.cleaningapp.server: DEBUG
 
 management:
   endpoints:

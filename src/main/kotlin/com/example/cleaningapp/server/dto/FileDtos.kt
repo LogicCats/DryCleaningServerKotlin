@@ -1,4 +1,7 @@
 package com.example.cleaningapp.server.dto
 
-class FileDtos {
-}
+
+data class FileUploadResponse(
+    val filename: String,
+    val url: String
+)

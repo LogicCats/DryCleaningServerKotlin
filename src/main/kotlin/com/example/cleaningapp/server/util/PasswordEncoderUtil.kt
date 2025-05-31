@@ -1,4 +1,10 @@
 package com.example.cleaningapp.server.util
 
-class PasswordEncoderUtil {
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
+
+object PasswordEncoderUtil {
+    @JvmStatic
+    fun bcryptEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 }
