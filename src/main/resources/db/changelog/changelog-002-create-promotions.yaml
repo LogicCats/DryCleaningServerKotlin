@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002
+      author: vasily
+      preConditions:
+        onFail: CONTINUE
+        not:
+          tableExists:
+            schemaName: public
+            tableName: promotions
+
+      changes:
+        - createTable:
+            tableName: promotions
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: promo_code
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: discount_percent
+                  type: DECIMAL(5,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: end_date
+                  type: DATE

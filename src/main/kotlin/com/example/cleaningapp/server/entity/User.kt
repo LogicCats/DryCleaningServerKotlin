@@ -8,7 +8,7 @@ import java.time.LocalDateTime
     name = "users",
     uniqueConstraints = [UniqueConstraint(columnNames = ["email"])]
 )
-class User(
+data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,

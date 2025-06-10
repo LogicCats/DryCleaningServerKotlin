@@ -9,9 +9,24 @@ import java.util.*
 
 interface OrderRepository : JpaRepository<Order, UUID> {
     fun findAllByUserIdOrderByCreatedAtDesc(userId: Long): List<Order>
-    fun findByUserIdAndIdContainingIgnoreCase(
+
+    // поиск по части idStr
+    fun findByUserIdAndIdStrContainingIgnoreCase(
         userId: Long,
         idPart: String,
         pageable: Pageable
     ): Page<Order>
+
+    fun findByUserIdAndAddressContainingIgnoreCase(
+        userId: Long,
+        address: String,
+        pageable: Pageable
+    ): Page<Order>
+
+    fun findByUserIdAndId(userId: Long, id: UUID, pageable: Pageable): Page<Order>
+
+    fun findByUserId(userId: Long, pageable: Pageable): Page<Order>
+
+
 }
+

@@ -6,10 +6,15 @@ import java.util.*
 
 @Entity
 @Table(name = "orders")
-class Order(
+data class Order(
     @Id
     @Column(columnDefinition = "UUID")
     var id: UUID = UUID.randomUUID(),
+
+
+    @Column(name = "id_str")
+    val idStr: String = id.toString(),
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -46,6 +51,7 @@ class Order(
 ) {
     constructor() : this(
         id = UUID.randomUUID(),
+        idStr = UUID.randomUUID().toString(), // для пустого конструктора
         user = User(),
         createdAt = LocalDateTime.now(),
         scheduledDateTime = LocalDateTime.now(),
@@ -57,3 +63,4 @@ class Order(
         images = mutableListOf()
     )
 }
+

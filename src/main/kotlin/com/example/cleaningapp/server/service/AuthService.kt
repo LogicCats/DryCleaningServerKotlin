@@ -40,7 +40,7 @@ class AuthService(
             name = request.name,
             phone = request.phone,
             createdAt = LocalDateTime.now(),
-            roles = setOf(userRole)
+            roles = mutableSetOf(userRole)
         )
         userRepository.save(user)
 

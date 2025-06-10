@@ -8,7 +8,7 @@ import java.time.LocalDateTime
     name = "promotions",
     uniqueConstraints = [UniqueConstraint(columnNames = ["code"])]
 )
-class Promotion(
+data class Promotion(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,

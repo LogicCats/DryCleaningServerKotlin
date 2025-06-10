@@ -39,10 +39,12 @@ class OrderService(
             val promo: Promotion = promotionRepository.findByCodeAndActiveTrue(request.promoCode!!)
                 ?: throw IllegalArgumentException("Промокод не найден или неактивен")
             val now = LocalDateTime.now()
-            if (promo.validFrom != null && promo.validFrom.isAfter(now)) {
+            val validFrom = promo.validFrom
+            val validTo = promo.validTo
+            if (validFrom  != null && validFrom.isAfter(now)) {
                 throw IllegalArgumentException("Промокод ещё не доступен")
             }
-            if (promo.validTo != null && promo.validTo.isBefore(now)) {
+            if (validTo != null && validTo.isBefore(now)) {
                 throw IllegalArgumentException("Промокод истёк")
             }
             promo.discountPct
@@ -78,8 +80,9 @@ class OrderService(
             promoCode = request.promoCode,
             totalAmount = totalAmount,
             status = "CREATED",
-            services = request.services
+            services = request.services.toMutableList()
         )
+
         orderRepository.save(order)
 
         // 6) Сохраняем изображения, если есть
@@ -162,22 +165,34 @@ class OrderService(
     fun searchOrders(
         username: String,
         query: String,
-        pageable: org.springframework.data.domain.Pageable
+        pageable: Pageable
     ): Page<OrderSummaryResponse> {
-        val user: User = userRepository.findByEmail(username)
+        val user = userRepository.findByEmail(username)
             ?: throw IllegalArgumentException("Пользователь не найден")
-        return orderRepository
-            .findByUserIdAndIdContainingIgnoreCase(user.id, query, pageable)
-            .map { order ->
-                OrderSummaryResponse(
-                    id = order.id.toString(),
-                    createdAt = order.createdAt.toString(),
-                    scheduledDateTime = order.scheduledDateTime.toString(),
-                    totalAmount = order.totalAmount,
-                    status = order.status
-                )
-            }
+
+        val orders: Page<Order> = when {
+            query.isBlank() -> orderRepository.findByUserId(user.id, pageable)
+
+            query.length >= 8 -> orderRepository.findByUserIdAndIdStrContainingIgnoreCase(user.id, query, pageable)
+
+            else -> orderRepository.findByUserIdAndAddressContainingIgnoreCase(user.id, query, pageable)
+        }
+
+        return orders.map { order ->
+            OrderSummaryResponse(
+                id = order.id.toString(),
+                createdAt = order.createdAt.toString(),
+                scheduledDateTime = order.scheduledDateTime.toString(),
+                totalAmount = order.totalAmount,
+                status = order.status
+            )
+        }
     }
+
+
+
+
+
 
     @Transactional
     fun updateOrder(
@@ -208,7 +223,8 @@ class OrderService(
             order.promoCode = it
             // Обновляем totalAmount при необходимости
         }
-        request.services?.let { order.services = it }
+        request.services?.let { order.services = it.toMutableList() }
+
 
         val saved = orderRepository.save(order)
 

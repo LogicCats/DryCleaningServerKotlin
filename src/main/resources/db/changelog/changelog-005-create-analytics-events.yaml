@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005
+      author: vasily
+      preConditions:
+        onFail: CONTINUE
+        not:
+          tableExists:
+            schemaName: public
+            tableName: analytics_events
+
+      changes:
+        - createTable:
+            tableName: analytics_events
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: event_type
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_timestamp
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: analytics_events
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_analytics_events

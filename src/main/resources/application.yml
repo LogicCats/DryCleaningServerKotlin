@@ -1,9 +1,17 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/cleaningapp_db
-    username: your_db_username
-    password: your_db_password
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 30000
+      pool-name: HikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -19,15 +27,20 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
 server:
-  port: 8080
+  port: 8888
 
 jwt:
-  secret: <ВАШ Base64-закодированный 32+-байтный секрет>
+  secret: xpbJdhpK9WQYBOstZ5+3dhYW+iu/dri8OPCSZX8dsuo=
   expiration-ms: 3600000
 
 app:
   upload:
     dir: ./uploads
+
+servlet:
+  multipart:
+    max-file-size: 10MB
+    max-request-size: 10MB
 
 logging:
   level:

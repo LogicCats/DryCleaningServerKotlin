@@ -1,16 +1,20 @@
 plugins {
 	id("org.springframework.boot") version "3.4.6"
 	id("io.spring.dependency-management") version "1.1.3"
-	kotlin("jvm") version "1.9.10"
-	kotlin("plugin.spring") version "1.9.10"
-	kotlin("plugin.jpa") version "1.9.10"
+	kotlin("jvm") version "1.9.24"
+	kotlin("plugin.spring") version "1.9.24"
+	kotlin("plugin.jpa") version "1.9.24"
 }
 
 group = "com.example.cleaningapp.server"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
+
+
+
 repositories {
+	google()
 	mavenCentral()
 }
 
@@ -33,8 +37,7 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")       // если вы будете разворачивать на Postgres
 	// runtimeOnly("com.h2database:h2")            // или для локальной разработки (in-memory)
 
-	// 5) Azure Support (можно удалить, если пока не нужен)
-	implementation("com.azure:azure-spring-boot-starter:3.34.0") // пример актуальной версии
+
 
 	// 6) Prometheus / Micrometer
 	implementation("io.micrometer:micrometer-registry-prometheus")
@@ -47,13 +50,19 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
 	// 9) (Опционально) email
-	// implementation("org.springframework.boot:spring-boot-starter-mail")
+	implementation("org.springframework.boot:spring-boot-starter-mail")
 
 	// Тестирование
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+
+	//implementation("com.azure.spring:azure-spring-boot-starter:4.10.0")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+kotlin {
+	jvmToolchain(21)
 }

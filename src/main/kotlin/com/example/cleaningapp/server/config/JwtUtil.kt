@@ -1,6 +1,9 @@
 package com.example.cleaningapp.server.config
 
-import io.jsonwebtoken.*
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.JwtException
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value
@@ -23,6 +26,12 @@ class JwtUtil(
     fun init() {
         val decoded: ByteArray = Base64.getDecoder().decode(jwtSecret)
         signingKey = Keys.hmacShaKeyFor(decoded)
+    }
+
+    @PostConstruct
+    fun checkSecret() {
+        check(!jwtSecret.isNullOrEmpty()) { "JWT secret is not set! Please configure JWT_SECRET env variable." }
+
     }
 
     fun generateToken(userEmail: String, roles: List<String> = emptyList()): String {
