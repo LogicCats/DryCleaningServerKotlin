@@ -46,11 +46,13 @@ class SecurityConfig(
                 authorize("/api/auth/**", permitAll)
                 authorize(HttpMethod.GET, "/api/promotions/**", permitAll)
                 authorize("/api/files/**", permitAll)
+                authorize(HttpMethod.GET, "/uploads/**", permitAll) // <- добавь это
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/swagger-ui/**", permitAll)
                 authorize("/swagger-ui.html", permitAll)
                 authorize(anyRequest, authenticated)
             }
+
 
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
